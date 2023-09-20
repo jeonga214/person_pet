@@ -1,109 +1,161 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { getMonth, getYear, getDate, addYears } from 'date-fns';
-import { ko } from "date-fns/locale";
 
 function Adoptt() {
-  const [data, setData] = useState([]); //data
-  const [upkind, setUpkind] = useState(''); // 종 선택 값을 상태로 관리
-  const [upstate, setState] = useState(''); // 종 선택 값을 상태로 관리
+  const [data, setData] = useState([]); // data
+  const [pageNum, setPageNum] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // 전체 아이템 수
+  const itemsPerPage = 5; // 페이지당 아이템 수
+  const totalPages = Math.ceil(totalCount / itemsPerPage); // 전체 페이지 수
+
+  function adoptsearch(e) {
+    e?.preventDefault();
+    let s1 = document.querySelector('[name=s1]').value;
+    let s2 = document.querySelector('[name=s2]').value;
+    let s3 = document.querySelector('[name=s3]').value;
+
+    const apiUrl = 'http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic'
+
+    const params = {
+      pageNo: pageNum,
+      numOfRows: itemsPerPage,
+      totalCount: '', // totalCount는 제거
+      orgdownNm: '',
+      upkind: s3,
+      upr_cd: s2,
+      state: s1,
+      serviceKey: 'TZfsVHVWd9fA3Rqbp2a6xaGgeoqpLx0eWKAWs5Cfh2oNP38l5bl5c0yfwr1cMcJRbDxDgC7EbSI8GaCgLoZMaQ==',
+    };
+
+    axios.get(apiUrl, { params })
+      .then(response => {
+        const convert = require('xml-js');
+        // XML 데이터를 JSON으로 변환
+        const jsonData = convert.xml2json(response.data, { compact: true, spaces: 4 });
+        // jsonData를 JavaScript 객체로 변환
+        const parsedData = JSON.parse(jsonData);
+
+        // 데이터를 상태 변수에 저장
+        setData(parsedData.response.body.items.item);
+        setTotalCount(parsedData.response.body.totalCount._text); // 전체 아이템 수 업데이트
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }
 
   useEffect(() => {
-    if (upkind !== '') {
-      const apiUrl = 'http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic'
+    adoptsearch();
+    //setPageNum(1);
+  }, [pageNum])
 
-      const params = {
-        pageNo: 1,
-        numOfRows: 5,
-        orgdownNm: '',
-        upkind: upkind,
-        org_cd: '',
-        state: '',
-        serviceKey: 'TZfsVHVWd9fA3Rqbp2a6xaGgeoqpLx0eWKAWs5Cfh2oNP38l5bl5c0yfwr1cMcJRbDxDgC7EbSI8GaCgLoZMaQ==',
-      };
+  const renderPageButtons = () => {
+    const buttons = [];
 
-      axios.get(apiUrl, { params })
-        .then(response => {
-          const convert = require('xml-js');
-          // XML 데이터를 JSON으로 변환
-          const jsonData = convert.xml2json(response.data, { compact: true, spaces: 4 });
-          // jsonData를 JavaScript 객체로 변환
-          const parsedData = JSON.parse(jsonData);
+    // 현재 페이지 그룹 계산
+    const currentPageGroup = Math.ceil(pageNum / 5);
 
-          // 데이터를 상태 변수에 저장
-          setData(parsedData.response.body.items.item);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
+    // 현재 페이지 그룹의 시작과 끝 페이지 계산
+    const startPage = (currentPageGroup - 1) * 5 + 1;
+    const endPage = Math.min(currentPageGroup * 5, totalPages);
+
+    // 이전 그룹 버튼
+    if (currentPageGroup > 1) {
+      buttons.push(
+        <button key="prev" onClick={() => setPageNum((currentPageGroup - 2) * 5 + 5)}>
+          &lt;
+        </button>
+      );
     }
-  }, [upkind]);
 
-  const handleUpkindChange = (event) => {
-    const selectedUpkind = event.target.value;
-    setUpkind(selectedUpkind);
+    // 페이지 버튼
+    for (let page = startPage; page <= endPage; page++) {
+      buttons.push(
+        <button
+          key={page}
+          onClick={() => setPageNum(page)}
+          disabled={page === pageNum}
+        >
+          {page}
+        </button>
+      );
+    }
+
+    // 다음 그룹 버튼
+    if (currentPageGroup < Math.ceil(totalPages / 5)) {
+      buttons.push(
+        <button key="next" onClick={() => setPageNum(currentPageGroup * 5 + 1)}>
+          &gt;
+        </button>
+      );
+    }
+
+    return buttons;
   };
-
-  
 
   return (
     <article className='adoptpage'>
       <div className='search'>
         <div className='select'>
           <div className='select2'>
-            <select>
-              <option value="">상태</option>
-              <option value="notice">공고중</option>
-              <option value="protect">보호중</option>
-            </select>
-            <select>
-              <option>시,도 선택</option>
-              <option value="6110000">서울특별시</option>
-              <option value="6260000">부산광역시</option>
-              <option value="6270000">대구광역시</option>
-              <option value="6280000">인천광역시</option>
-              <option value="6290000">광주광역시</option>
-            </select>
-            <select onChange={handleUpkindChange}>
-              <option value="">종 선택</option>
-              <option value="417000">강아지</option>
-              <option value="422400">고양이</option>
-              <option value="429900">기타</option>
-            </select>
+            <form onSubmit={adoptsearch}>
+              <select name='s1' defaultValue="protect">
+                <option value="">상태</option>
+                <option value="notice">공고중</option>
+                <option value="protect">보호중</option>
+              </select>
+              <select name='s2' defaultValue="6110000">
+                <option value="">시,도 선택</option>
+                <option value="6110000">서울특별시</option>
+                <option value="6260000">부산광역시</option>
+                <option value="6270000">대구광역시</option>
+                <option value="6280000">인천광역시</option>
+                <option value="6290000">광주광역시</option>
+                <option value="5690000">세종특별자치시</option>
+                <option value="6300000">대전광역시</option>
+                <option value="6310000">울산광역시</option>
+                <option value="6410000">경기도</option>
+                <option value="6530000">강원특별자치도</option>
+                <option value="6430000">충청북도</option>
+                <option value="6440000">충청남도</option>
+                <option value="6450000">전라북도</option>
+                <option value="6460000">전라남도</option>
+                <option value="6470000">경상북도</option>
+                <option value="6480000">경상남도</option>
+                <option value="6500000">제주특별자치도</option>
+              </select>
+              <select name='s3' defaultValue="417000">
+                <option value="">종 선택</option>
+                <option value="417000">강아지</option>
+                <option value="422400">고양이</option>
+                <option value="429900">기타</option>
+              </select>
+              <button>적용</button>
+            </form>
           </div>
         </div>
       </div>
       <div className='adoptlist'>
-      {data.map((item, index) => (
-        <div className='adopt' key={index}>
-          <div><img src={item.popfile._text}/></div>
-          <div>
-            <h2><span>코드</span>{item.desertionNo._text}</h2>
-            <p><span>품종: </span>{item.kindCd._text}</p>
-            <p><span>나이 : </span>{item.age._text}</p>
-            <p><span>보호소 : </span>{item.careNm._text}</p>
-            <p><span>상태 : </span>{item.processState._text}</p>
+        {data.map((item, index) => (
+          <div className='adopt' key={index}>
+            <div><img src={item.popfile._text} alt={item.careNm._text} /></div>
+            <div>
+              <h2><span>코드</span>{item.desertionNo._text}</h2>
+              <p><span>품종: </span>{item.kindCd._text}</p>
+              <p><span>나이 : </span>{item.age._text}</p>
+              <p><span>보호소 : </span>{item.careNm._text}</p>
+              <p><span>기간 : </span>{item.noticeSdt._text} ~ {item.noticeEdt._text}</p>
+              <p><span>상태 : </span>{item.processState._text}</p>
+            </div>
           </div>
-        </div>
         ))}
       </div>
       <div className='pagenum'>
-        <button>&lt;</button>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button>&gt;</button>
+        {renderPageButtons()}
       </div>
     </article>
   )
 }
 
-//https://yelee.tistory.com/90
-//https://yohanpro.com/posts/react/react-datepicker
-
-export default Adoptt
+export default Adoptt;

@@ -3,7 +3,8 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import Adopt from './comp/Adoptt';
 import Home from './comp/Home';
 import GlobalStyles from "./GlobalStyles";
-import Map from './comp/Map';
+import CustomMap from './comp/CustomMap';
+import Chat from './comp/Chat';
 
 function App() {
   return (
@@ -11,8 +12,9 @@ function App() {
       <GlobalStyles/>
       <main>
         <Routes>
+          <Route path="/chat" element={<Chat/>} />
           <Route path="/" element={<Home/>} />
-          <Route path="/kakao" element={<Map/>} />
+          <Route path="/kakao" element={<CustomMap/>} />
           <Route path="/adopt" element={<Adopt/>} />
         </Routes>
       </main>
@@ -20,11 +22,11 @@ function App() {
       <footer>
         <div className='foot'>
           <nav>
-            <Link to="/">게시글</Link>
+            <Link to="/chat">게시글</Link>
             <Link to="/kakao">지도</Link>
             <Link to="/">Home</Link>
             <Link to="/adopt">입양</Link>
-            <Link to="/">마이페이지</Link>
+            {/* <Link to="/">마이페이지</Link> */}
           </nav>
         </div>
       </footer>
