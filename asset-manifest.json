@@ -1,15 +1,18 @@
 {
   "files": {
-    "main.css": "/person_pet/static/css/main.6271a355.css",
-    "main.js": "/person_pet/static/js/main.7cbc7bc5.js",
-    "static/js/787.00ecb077.chunk.js": "/person_pet/static/js/787.00ecb077.chunk.js",
-    "index.html": "/person_pet/index.html",
-    "main.6271a355.css.map": "/person_pet/static/css/main.6271a355.css.map",
-    "main.7cbc7bc5.js.map": "/person_pet/static/js/main.7cbc7bc5.js.map",
-    "787.00ecb077.chunk.js.map": "/person_pet/static/js/787.00ecb077.chunk.js.map"
+    "main.css": "/jeonga214/person_pet.git/static/css/main.6b048a1a.css",
+    "main.js": "/jeonga214/person_pet.git/static/js/main.3a945ad6.js",
+    "static/js/787.00ecb077.chunk.js": "/jeonga214/person_pet.git/static/js/787.00ecb077.chunk.js",
+    "service-worker.js": "/jeonga214/person_pet.git/service-worker.js",
+    "index.html": "/jeonga214/person_pet.git/index.html",
+    "static/media/chat.svg": "/jeonga214/person_pet.git/static/media/chat.141a328c8b2b4d9d7d293c66d03cc1d0.svg",
+    "static/media/home.svg": "/jeonga214/person_pet.git/static/media/home.97a5076a0efd364875808a050127f7c5.svg",
+    "main.6b048a1a.css.map": "/jeonga214/person_pet.git/static/css/main.6b048a1a.css.map",
+    "main.3a945ad6.js.map": "/jeonga214/person_pet.git/static/js/main.3a945ad6.js.map",
+    "787.00ecb077.chunk.js.map": "/jeonga214/person_pet.git/static/js/787.00ecb077.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6271a355.css",
-    "static/js/main.7cbc7bc5.js"
+    "static/css/main.6b048a1a.css",
+    "static/js/main.3a945ad6.js"
   ]
 }
