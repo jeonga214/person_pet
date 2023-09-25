@@ -9,7 +9,7 @@ import Detail from './comp/Detail';
 
 function App() {
   return (
-    <BrowserRouter >
+    <BrowserRouter basename='https://github.com/jeonga214/person_pet.git'>
       <GlobalStyles/>
       <main>
         <Routes>
