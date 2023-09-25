@@ -9,7 +9,7 @@ import Detail from './comp/Detail';
 
 function App() {
   return (
-    <BrowserRouter basename='/person_pet'>
+    <BrowserRouter >
       <GlobalStyles/>
       <main>
         <Routes>

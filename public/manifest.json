@@ -3,12 +3,12 @@
   "name": "Create React App Sample",
   "icons": [
     {
-      "src": "/person_pet/icon/favicon-16x16.png",
+      "src": "https://github.com/jeonga214/person_pet.git/icon/favicon-16x16.png",
       "sizes": "16x16",
       "type": "image/png"
     },
     {
-      "src": "/person_pet/icon/favicon-32x32.png",
+      "src": "https://github.com/jeonga214/person_pet.git/icon/favicon-32x32.png",
       "sizes": "32x32",
       "type": "image/png"
     }

@@ -36,7 +36,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "/person_pet",
+  "homepage": "https://github.com/jeonga214/person_pet.git",
   "eslintConfig": {
     "extends": [
       "react-app",
