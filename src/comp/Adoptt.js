@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link, useParams } from 'react-router-dom';
 
 function Adoptt() {
   const [data, setData] = useState([]); // data
@@ -9,19 +10,23 @@ function Adoptt() {
   const itemsPerPage = 5; // 페이지당 아이템 수
   const totalPages = Math.ceil(totalCount / itemsPerPage); // 전체 페이지 수
 
+  //console.log(data);
+
   function adoptsearch(e) {
     e?.preventDefault();
     let s1 = document.querySelector('[name=s1]').value;
     let s2 = document.querySelector('[name=s2]').value;
     let s3 = document.querySelector('[name=s3]').value;
 
+    if(e?.target){
+      setPageNum(1)
+    }
+
     const apiUrl = 'http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic'
 
     const params = {
       pageNo: pageNum,
       numOfRows: itemsPerPage,
-      totalCount: '', // totalCount는 제거
-      orgdownNm: '',
       upkind: s3,
       upr_cd: s2,
       state: s1,
@@ -47,52 +52,50 @@ function Adoptt() {
 
   useEffect(() => {
     adoptsearch();
-    //setPageNum(1);
   }, [pageNum])
 
   const renderPageButtons = () => {
     const buttons = [];
 
-    // 현재 페이지 그룹 계산
-    const currentPageGroup = Math.ceil(pageNum / 5);
-
-    // 현재 페이지 그룹의 시작과 끝 페이지 계산
-    const startPage = (currentPageGroup - 1) * 5 + 1;
-    const endPage = Math.min(currentPageGroup * 5, totalPages);
-
-    // 이전 그룹 버튼
-    if (currentPageGroup > 1) {
-      buttons.push(
-        <button key="prev" onClick={() => setPageNum((currentPageGroup - 2) * 5 + 5)}>
-          &lt;
-        </button>
-      );
+    if (data && data.length > 0) {
+      // 데이터가 있는 경우에만 페이지 버튼 생성 로직 추가
+      const currentPageGroup = Math.ceil(pageNum / 5);
+      const startPage = (currentPageGroup - 1) * 5 + 1;
+      const endPage = Math.min(currentPageGroup * 5, totalPages);
+    
+      if (currentPageGroup > 1) {
+        buttons.push(
+          <button key="prev" onClick={() => setPageNum((currentPageGroup - 2) * 5 + 5)}>
+            &lt;
+          </button>
+        );
+      }
+    
+      for (let page = startPage; page <= endPage; page++) {
+        buttons.push(
+          <button
+            key={page}
+            onClick={() => setPageNum(page)}
+            disabled={page === pageNum}
+          >
+            {page}
+          </button>
+        );
+      }
+    
+      if (currentPageGroup < Math.ceil(totalPages / 5)) {
+        buttons.push(
+          <button key="next" onClick={() => setPageNum(currentPageGroup * 5 + 1)}>
+            &gt;
+          </button>
+        );
+      }
     }
 
-    // 페이지 버튼
-    for (let page = startPage; page <= endPage; page++) {
-      buttons.push(
-        <button
-          key={page}
-          onClick={() => setPageNum(page)}
-          disabled={page === pageNum}
-        >
-          {page}
-        </button>
-      );
-    }
-
-    // 다음 그룹 버튼
-    if (currentPageGroup < Math.ceil(totalPages / 5)) {
-      buttons.push(
-        <button key="next" onClick={() => setPageNum(currentPageGroup * 5 + 1)}>
-          &gt;
-        </button>
-      );
-    }
 
     return buttons;
   };
+
 
   return (
     <article className='adoptpage'>
@@ -137,19 +140,25 @@ function Adoptt() {
         </div>
       </div>
       <div className='adoptlist'>
-        {data.map((item, index) => (
-          <div className='adopt' key={index}>
-            <div><img src={item.popfile._text} alt={item.careNm._text} /></div>
-            <div>
-              <h2><span>코드</span>{item.desertionNo._text}</h2>
-              <p><span>품종: </span>{item.kindCd._text}</p>
-              <p><span>나이 : </span>{item.age._text}</p>
-              <p><span>보호소 : </span>{item.careNm._text}</p>
-              <p><span>기간 : </span>{item.noticeSdt._text} ~ {item.noticeEdt._text}</p>
-              <p><span>상태 : </span>{item.processState._text}</p>
-            </div>
-          </div>
-        ))}
+        {data && data.length > 0 ? (
+          data.map((item, index) => (
+            <Link to={`/adopt/${item.desertionNo._text}`} state={{item}}>
+              <div className='adopt' key={index}>
+                <div><img src={item.popfile._text} /></div>
+                <div>
+                  <h2><span>코드</span>{item.desertionNo._text}</h2>
+                  <p><span>품종 : </span>{item.kindCd._text}</p>
+                  <p><span>나이 : </span>{item.age._text}</p>
+                  <p><span>보호소 : </span>{item.careNm._text}</p>
+                  <p><span>기간 : </span>{item.noticeSdt._text} ~ {item.noticeEdt._text}</p>
+                  <p><span>상태 : </span>{item.processState._text}</p>
+                </div>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div>결과가 없습니다.</div>
+        )}
       </div>
       <div className='pagenum'>
         {renderPageButtons()}

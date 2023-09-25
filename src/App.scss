@@ -2,12 +2,17 @@
 footer{
   z-index: 10000;
   position: fixed;
-  bottom: 0;
+  bottom: -2px;
   max-width: 393px;
-  width: 100%; height: 25px;
+  width: 100%; height: 41px;
+  background-color: #bde3f0;
+  border-radius: 0 0 30px 30px;
   .foot{
+    height: 100%;
+    display: flex;
+    align-items: center;
     nav{
-      width: 100%;
+      width: 100%; height: 100%;
       display: flex;
       align-items: center;
       justify-content: space-evenly;
@@ -82,7 +87,7 @@ footer{
     margin: 0 auto;
     display: inline-block;
     display: flex;
-    justify-content: baseline;
+    justify-content: center;
     >button{
       display: flex;
       justify-content: center;
@@ -96,10 +101,11 @@ footer{
 .writepage{
   position: relative;
   padding: 0 20px;
-  margin-top: 10px;
-  .con{
+  height: 852px;
+  .writecon{
+    padding-top: 10px;
     >h2{}
-    .ani{
+    .animal{
       margin: 20px 0;
       >span{
         background-color: #85afde;
@@ -110,7 +116,30 @@ footer{
         cursor: pointer;
       }
     }
+    .whole{
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 852px;
+      margin: 0;
+      padding: 0;
+      border-radius: 25px;
+      background-color: #8d8d8dc0;
+    }
+    .whole.active{
+      display: block;
+    }
     .writepop{
+      background-color: #eee294;
+      cursor: pointer;
+      display: inline-block;
+      padding: 10px;
+      border: 1px solid black;
+      margin-right: 10px;
+    }
+    .mywrite{
       background-color: #eee294;
       cursor: pointer;
       display: inline-block;
@@ -120,15 +149,84 @@ footer{
   }
   .pop{
     position: absolute;
-    top: 0;
-
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
     display: none;
     border: 1px solid black;
-    width: 321px; height: 500px;
+    width: 321px;
     background-color: #bde3f0;
+    >div{
+      padding: 20px;
+      .write_title{
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+      >form{
+        margin-top: 20px;
+        .anisel{
+          margin-bottom: 10px;
+          >label{
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+            >input{
+              margin: 0 2px 0 0;
+            }
+          }
+        }
+        .con{
+          >input:nth-of-type(1){
+            display: block;
+            margin: 0 auto;
+            width: 280px; height: 50px;
+            padding: 0;
+            border-inline: inherit;
+            margin-bottom: 10px;
+          }
+          input:nth-of-type(2){
+            display: block;
+            margin: 0 auto;
+            width: 280px; height: 300px;
+            padding: 0;
+            border-inline: inherit;
+            margin-bottom: 10px;
+          }
+          >input:nth-of-type(3){
+            display: block;
+            margin: 0 auto;
+            width: 280px;
+          }
+        }
+      }
+    }
   }
   .pop.active{
     display: block;
+  }
+  .listt{
+    margin-top: 20px;
+    padding: 10px;
+    overflow-wrap: break-word;
+    border: 1px solid black;
+    >h2{
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+    >p{
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+}
+.detail{
+  .aniimg{
+    >img{
+      width: 100%; max-height: 300px;
+      object-fit: cover;
+      border-radius: 25px 25px 0 0;
+    }
   }
 }
 
